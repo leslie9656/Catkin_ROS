@@ -72,6 +72,15 @@ rosed 包名 文件名 修改功能包文件
 **需要注意的是，话题名称必须一致，不然就因为话题不一致，导致话题连接失败**  
 PS：  
 - 回调函数spin() 不立刻实现，等待一个消息提示之后，函数实现
+- 话题通信自定义msg  
+  - ros自带的msg无法满足复杂的数据类型，需要自己实现一个msg文件。  
+  - 可以使用的数据类型： int float string time duration 数组  
+  - ros还有一种特殊类型：header，包含时间戳和ros中常用的坐标帧信息。
+  - 实现：
+    - 编写msg文件
+    - 配置package.xml
+    - 配置CMakeList.txt
+    - 编译，生成中间文件（cpp->devel/include/包名/xxx.h  python->devel/lib/python3/msg）
 ## 服务通信（请求响应模式）
 
 ## 参数服务器（参数共享模式）
