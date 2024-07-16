@@ -11,6 +11,7 @@ def main():
 
     msg = String()
 
+    rospy.sleep(3)
     while not rospy.is_shutdown():
         msg.data = "hello"
         pub.publish(msg)
