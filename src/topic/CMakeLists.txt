@@ -178,11 +178,9 @@ target_link_libraries(demo04_sub_person
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   scripts/demo01_pub.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-catkin_install_python(PROGRAMS
   scripts/demo02_sub.py
+  scripts/demo03_pub_person.py
+  scripts/demo04_sub_person.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
