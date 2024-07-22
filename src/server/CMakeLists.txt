@@ -135,6 +135,8 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/server_node.cpp)
+add_executable(demo01_server src/demo01_server.cpp)
+add_executable(demo02_client src/demo02_client.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -144,12 +146,17 @@ include_directories(
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(demo01_server ${PROJECT_NAME}_gencpp)
+add_dependencies(demo02_client ${PROJECT_NAME}_gencpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(demo01_server
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(demo02_client
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
@@ -160,11 +167,15 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+catkin_install_python(PROGRAMS
+  scripts/demo01_server.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
+catkin_install_python(PROGRAMS
+  scripts/demo02_client.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
 # install(TARGETS ${PROJECT_NAME}_node
