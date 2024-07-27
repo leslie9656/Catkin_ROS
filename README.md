@@ -123,7 +123,7 @@ rosnode list    列出活动节点
 rosnode info    打印节点信息
 rosnode machine    列出指定设备上节点
 rosnode kill    杀死某个节点
-rosnode cleanup    清除不可连接的节点
+rosnode cleanup    清除不可连接的节点（僵尸节点）
 ```
 
 - rostopic:操作话题
@@ -176,6 +176,26 @@ rosparam set    设置参数
 rosparam get    获取参数
 rosparam load    从外部文件加载参数
 rosparam dump    将参数写出到外部文件
-rosparam delete    删除参数
-rosparam list    列出所有参数
+rosparam delete    删除参数  
+rosparam list    列出所有参数  
+```
+
+## 话题通信和服务通信的异同
+### 同
+- 1. 都需要 发布 一个接收  
+- 2. 都需要话题名称  
+- 3. 都需要数据载体  
+### 异
+- 1. 话题通信是异步的，启动无顺序，节点可以多对多  
+- 2. 服务通信是同步的，启动有顺序，节点可以一对多（一个server）  
+- 3. 数据载体内容不同  
+
+# 4. ROS通信机制进阶
+## 常用API （cpp）
+```
+# include "ros/ros.h"
+
+int main(int argc, char **argv){
+  
+}
 ```
