@@ -193,9 +193,74 @@ rosparam list    列出所有参数
 # 4. ROS通信机制进阶
 ## 常用API （cpp）
 ```
-# include "ros/ros.h"
+# 初始化
+ /*
+ * 该函数可以解析并使用节点启动时传入的参数(通过参数设置节点名称、命名空间...) 
+ *
+ * 该函数有多个重载版本，如果使用NodeHandle建议调用该版本。 
+ *
+ * \param argc 参数个数
+ * \param argv 参数列表
+ * \param name 节点名称，需要保证其唯一性，不允许包含命名空间
+ * \param options 节点启动选项，被封装进了ros::init_options
+ *
+ */
+ros::init(argc,argv,"topic_name",ros::init_options::AnonymousName)
 
-int main(int argc, char **argv){
-  
+# 话题和服务通信
+## 发布对象
+/**
+* \brief 根据话题生成发布对象
+*
+* 在 ROS master 注册并返回一个发布者对象，该对象可以发布消息
+*
+* 使用示例如下:
+*
+*   ros::Publisher pub = handle.advertise<std_msgs::Empty>("my_topic", 1);
+*
+* \param topic 发布消息使用的话题
+*
+* \param queue_size 等待发送给订阅者的最大消息数量
+*
+* \param latch (optional) 如果为 true,该话题发布的最后一条消息将被保存，并且后期当有订阅者连接时会将该消息发送给订阅者
+*
+* \return 调用成功时，会返回一个发布对象
+*
+*
+*/
+
+## 订阅对象
+/**
+   * \brief 生成某个话题的订阅对象
+   *
+   * 该函数将根据给定的话题在ROS master 注册，并自动连接相同主题的发布方，每接收到一条消息，都会调用回调
+   * 函数，并且传入该消息的共享指针，该消息不能被修改，因为可能其他订阅对象也会使用该消息。
+   * 
+   * 使用示例如下:
+
+void callback(const std_msgs::Empty::ConstPtr& message)
+{
 }
+
+ros::Subscriber sub = handle.subscribe("my_topic", 1, callback);
+
+   *
+* \param M [template] M 是指消息类型
+* \param topic 订阅的话题
+* \param queue_size 消息队列长度，超出长度时，头部的消息将被弃用
+* \param fp 当订阅到一条消息时，需要执行的回调函数
+* \return 调用成功时，返回一个订阅者对象，失败时，返回空对象
+* 
+
+void callback(const std_msgs::Empty::ConstPtr& message){...}
+ros::NodeHandle nodeHandle;
+ros::Subscriber sub = nodeHandle.subscribe("my_topic", 1, callback);
+if (sub) // Enter if subscriber is valid
+{
+...
+}
+
+*/ 
+
+
 ```
