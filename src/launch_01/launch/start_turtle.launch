@@ -1,0 +1,19 @@
+<launch deprecated="此文件过旧">
+    <!-- 启动的节点 -->
+    <!-- <node pkg="包名" 
+               type="节点类型" 
+               name="节点名称" 
+               args="xxx xxx xxx" 
+               machine="机器名" 
+               respawn="true"是否自动重启 
+               respawn_delay="n"延迟n秒启动节点 
+               required="true"必须的节点，如果退出，则整个文件全部停止 
+               ns="hello" 设置节点的命名空间
+               clear_params="true" 启动前，删除所有参数（慎用）
+               output="screen" /> -->
+    
+    <node pkg="turtlesim" type="turtlesim_node" name="my_turtle" output="screen" />
+    <node pkg="turtlesim" type="turtle_teleop_key" name="my_key" output="screen" />
+
+
+</launch>
