@@ -262,5 +262,13 @@ if (sub) // Enter if subscriber is valid
 
 */ 
 
+```
 
+## python 模块导入
+导入范式参考：
+```
+path = os.path.abspath(".")
+# 核心
+sys.path.insert(0,path + "/src/plumbing_pub_sub/scripts")
+import tools
 ```
