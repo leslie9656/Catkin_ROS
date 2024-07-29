@@ -272,3 +272,15 @@ path = os.path.abspath(".")
 sys.path.insert(0,path + "/src/plumbing_pub_sub/scripts")
 import tools
 ```
+
+# 5. ROS运行管理
+如何关联不同的功能包，使其互相配合。  
+## ROS元功能包（metapackage）
+是ros中的一个虚包，没有实质性的内容，但是它依赖了其他的软件包，通过这种方法将他们组合起来。
+## ROS节点launch文件
+用来启动多个节点
+## ROS节点名称重名
+
+## ROS服务通信名称重名
+
+## ROS参数服务器名称重名
