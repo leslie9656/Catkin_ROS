@@ -1,0 +1,25 @@
+bg_B: 101
+bg_G: 225
+bg_R: 100
+my_turtle:
+  background_b: 255
+  background_g: 86
+  background_r: 69
+  bg_B: 101
+  bg_G: 225
+  bg_R: 100
+  param_B: 200
+param_A: 100
+rosdistro: 'noetic
+
+  '
+roslaunch:
+  uris:
+    host_wp__34083: http://WP:34083/
+    host_wp__35511: http://WP:35511/
+    host_wp__38981: http://WP:38981/
+    host_wp__41087: http://WP:41087/
+rosversion: '1.16.0
+
+  '
+run_id: 7bca9c24-4f40-11ef-ba0e-d15036a675fa
