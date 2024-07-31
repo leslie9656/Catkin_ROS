@@ -278,9 +278,155 @@ import tools
 ## ROS元功能包（metapackage）
 是ros中的一个虚包，没有实质性的内容，但是它依赖了其他的软件包，通过这种方法将他们组合起来。
 ## ROS节点launch文件
-用来启动多个节点
-## ROS节点名称重名
+用来启动多个节点  
+```
+<launch deprecated="此文件过旧">
+    <!-- 启动的节点 -->
+    <!-- <node pkg="包名" 
+               type="节点类型" 
+               name="节点名称" 
+               args="xxx xxx xxx" 
+               machine="机器名" 
+               respawn="true"是否自动重启 
+               respawn_delay="n"延迟n秒启动节点 
+               required="true"必须的节点，如果退出，则整个文件全部停止 
+               ns="hello" 设置节点的命名空间
+               clear_params="true" 启动前，删除所有参数（慎用）
+               output="screen" /> -->
+    <!-- param 使用： 向参数服务器设置参数 -->
+    <!-- 格式1： launch下，node外 -->
+    <param name="param_A" type="int" value="100" />
 
+    <!-- rosparam 使用：操作参数服务器数据 -->
+    <!-- 格式1： launch下， node外 -->
+    <!-- 加载参数 -->
+    <rosparam command="load" file="$(find launch_01)/launch/param.yaml" />
+
+
+    <!-- 格式2： node下 -->
+    <node pkg="turtlesim" type="turtlesim_node" name="my_turtle" output="screen" >
+        <!-- <remap from="/turtle1/cmd_vel" to="/cmd_vel" /> -->
+
+        <param name="param_B" type="int" value="200" />
+    
+        <rosparam command="load" file="$(find launch_01)/launch/param.yaml" />
+
+
+    </node>
+
+    <node pkg="turtlesim" type="turtle_teleop_key" name="my_key" output="screen" />
+
+    <arg name="car_length" value="0.55" />
+
+    <param name="A" value="$(arg car_length)" />
+
+    <param name="B" value="$(arg car_length)" />
+
+    <param name="C" value="$(arg car_length)" />
+
+    <include file="$(find launch_01)/launch/start_turtle_use.launch"/>
+
+
+</launch>
+```
+## ROS工作空间覆盖
+虽然在特定的工作空间内的功能包不能重名,但是自定义工作空间的功能包和内置的功能包可以重名,或者不同的工作空间的功能包出现重名.  
+
+在.bashrc中,后刷新的环境,优先级更高.  
+
+## ROS节点名称重名
+要同时启动两个名称相同的节点,有以下方法:
+```
+方法1  设置命名空间
+rosrun turtlesim hello_ws __ns:=topic1
+rosrun turtlesim hello_ws __ns:=topic2
+
+方法2 设置重命名
+rosrun turtlesim hello_ws __name:=topic1
+rosrun turtlesim hello_ws __name:=topic2
+
+方法3 叠加
+rosrun turtlesim hello_ws __name:=topic1 __ns:=topic3
+rosrun turtlesim hello_ws __name:=topic2 __ns:=topic4
+
+方法4 launch文件设置
+
+方法5 编码设置命名空间和重映射
+# cpp 实现
+ros::init(argc,argv,"chatter",ros::init_options::AnonymousName);
+
+# or
+std::map<std::string,std::string> map;
+map["__ns"] = "xxxx";
+ros::init(map,"chatter");
+
+# py实现
+rospy.init_node("chatter",anonymous=True)
+
+
+```
 ## ROS服务通信名称重名
+两者话题不应该重名 && 两者话题应该重名  
+解决: 设置前缀:全局,相对,私有  
+
+方法:
+```
+int main(int argc,char * argv[]){
+
+    setlocale(LC_ALL,"");
+
+    ros::init(argc,argv,"topic_name");
+    ros::NodeHandle nh;
+
+    //核心:设置不同类型的话题
+    //1.全局话题
+    ros::Publisher pub = nh.advertise<std_msgs::String>("/chatter",1000);
+    // or
+    // ros::Publisher pub = nh.advertise<std_msgs::String>("/rename/chatter",1000);
+
+    //2.相对话题
+    ros::Publisher pub = nh.advertise<std_msgs::String>("rename/chatter",1000);
+
+    //3.私有话题 需要创建特定的 nh
+    // 如果私有的nh创建的话题以/开头,这时就变成全局的.
+    ros::NodeHandle nh("~");
+
+    ros::Publisher pub = nh.advertise<std_msgs::String>("chatter",1000);
+    // or
+    ros::Publisher pub = nh.advertise<std_msgs::String>("rename/chatter",1000);
+
+    return 0;
+}
+```
 
 ## ROS参数服务器名称重名
+和话题名称类似
+
+## ROS分布式通信
+- ROS是一个分布式计算环境.一个运行的ROS系统可以包含分布在多台计算机上的多个节点.根据需要可以获取节点.  
+- 要求: 所有端口的计算机必须是双向连接; 计算机需要公告自己的存在.
+- 实现:
+  - 准备: 保证所有机器在同一网络中,最好设置固定IP;
+  - 配置文件修改: 分别修改不同计算机的 /etc/hosts文件,在该文件中加入对方的IP和计算机名  
+  ```
+  主机端: 从机IP 从机计算机名
+  从机端: 主机IP 主机计算机名
+
+  查看IP: ifconfig
+  查看计算机名: hostname
+  ```
+  - 配置主机IP (需要启动roscore)
+  ```
+  在.bashrc增加
+  export ROS_MASTER_URI=http://主机IP:11311
+  export ROS_HOSTNAME=主机IP
+  ```
+  - 配置从机IP
+  ```
+  在.bashrc增加
+  export ROS_MASTER_URI=http://主机IP:11311
+  export ROS_HOSTNAME=从机IP
+  ```
+
+  - 测试
+  通过订阅发布节点,进行测试
