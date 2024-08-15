@@ -430,3 +430,52 @@ int main(int argc,char * argv[]){
 
   - 测试
   通过订阅发布节点,进行测试
+
+  # 6. ROS常用组件
+  ## 6.1 TF坐标变换
+  tf2对应的常用功能包为：   
+    - tf2_geometry_msgs: 将ros消息转换成tf2消息
+    - tf2: 封装了坐标变换的常用信息
+    - tf2_ros: 为tf2提供roscpp和rospy绑定。
+```
+rosmsg info geometry_msgs/PointStamped
+print:
+std_msgs/Header header
+  uint32 seq
+  time stamp
+  string frame_id
+geometry_msgs/Point point
+  float64 x
+  float64 y
+  float64 z
+
+rosmsg info geometry_msgs/TransformStamped
+print:
+std_msgs/Header header
+  uint32 seq
+  time stamp
+  string frame_id
+string child_frame_id
+geometry_msgs/Transform transform
+  geometry_msgs/Vector3 translation
+    float64 x
+    float64 y
+    float64 z
+  geometry_msgs/Quaternion rotation
+    float64 x
+    float64 y
+    float64 z
+    float64 w
+
+```
+## 6.2 静态坐标变换
+- 两个坐标变换之间的相对位置是固定的。  
+- 实现分析：
+  - 坐标系相对关系，可以通过发布方发布；
+  - 订阅方，订阅到发布的坐标系相对关系，再传入座标点信息，然后借助于tf2实现坐标变换，输出结果。
+
+## 6.3 动态坐标变换
+- 两个坐标变换之间的相对位置是动态的。
+- 实现分析：
+  - 坐标系相对关系，可以通过发布方发布；
+  - 订阅方，订阅到发布的坐标系相对关系，再传入座标点信息，然后借助于tf2实现坐标变换，输出结果。
